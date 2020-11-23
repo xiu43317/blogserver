@@ -5,6 +5,7 @@ var mongoose = require('mongoose');
 var Blog = mongoose.model('Blog');
 var Comment = mongoose.model('Comment');
 var Admin = mongoose.model('Admin');
+var qs = require('qs');
 
 //使用者登入確認
 router.post('/admin', function (req, res, next) {
@@ -24,6 +25,22 @@ router.post('/admin', function (req, res, next) {
     });
 });
 
+// 新增一組帳密
+// router.get('/admin',function(req,res,next){
+//     new Admin({
+//         Username:'Rock',
+//         Password:'1234',
+//     }).save(function(err){
+//         if(err){
+//             console.log('Failure')
+//             res.send('Failure');
+//         }else{
+//             console.log('Success');
+//             res.send('Success');
+//         }
+//     });
+// });
+
 //顯示全部文章
 router.get('/show', function(req, res, next) {
     res.locals.username = req.session.name;
@@ -32,14 +49,59 @@ router.get('/show', function(req, res, next) {
         if(err){
             res.send(err);
         }else{
-            res.send(blogs.reverse());
+            res.send(blogs);
         }
     });
   });
 
+router.get('/setmessage',function(req,res,next){
+    Comment.find(function(err,comments,count){
+        if(err){
+            res.send(err);
+        }else{
+            res.send(comments);
+        }
+    });
+});
+
+router.post('/updatebackend',function(req,res,next) {
+    var blog =req.body.posts;
+    var comment = req.body.comments;
+    Blog.deleteMany(function(err){
+        if(err){
+            console.log('Fail to delete Blog');
+        } else {
+            console.log('delete Blog');
+            Blog.insertMany(blog,(err) => {
+                if(err){
+                    console.log('Fail to save Blog');
+                }else{
+                    console.log('save Blog');
+                }
+            });
+        }
+    });
+    Comment.deleteMany(function(err){
+        if(err){
+            console.log('Fail to delete database');
+        } else {
+            console.log('delete Comment');
+            Comment.insertMany(comment,function(err){
+                if(err){
+                    console.log('Fail to save comment');
+                    res.send('Failure');
+                }else{
+                    console.log('save comment');
+                    res.send('Success');
+                }
+            })
+        }
+    });
+});
+
 /* 使用者刪除文章功能. */
 router.get('/delete/:id', function (req, res, next) {
-    Blog.deleteOne({ _id: req.params.id }, function (err) {
+    Blog.deleteOne({ id: req.params.id }, function (err) {
         if (err) {
             console.log('Fail to delete article');
             res.send("Failure");

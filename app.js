@@ -27,8 +27,12 @@ app.set('view engine', 'jade');
 
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(bodyParser());
+app.use(bodyParser.json());
+app.use(bodyParser.raw());
+app.use(bodyParser.urlencoded( {extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 //啟用session
