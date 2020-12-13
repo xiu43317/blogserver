@@ -5,7 +5,7 @@ This server is using mongoose to build apis, and myblog system can fetch data fr
 <p><a href="https://books.google.com.tw/books?id=YyMqCwAAQBAJ&printsec=frontcover&hl=zh-TW">不一樣的Node.js：用JavaScript打造高效能的前後台網頁程式</a>
 </p>
 
-## Build Setup
+## Build Setup (need run MongoDB first)
 
 ``` bash
 
